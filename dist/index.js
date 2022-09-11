@@ -34,8 +34,8 @@ const publicDirectoryPath = path.join(__dirname, "../public");
 app.use(express.static(publicDirectoryPath));
 if (PRODUCTION) {
   app.use((req, res, next) => {
-    if (!req.hostname.includes("hacks.prodigypnp.com")) {
-      res.send("Direct IP connection is prohibited. Try using hacks.prodigypnp.com")
+    if (!req.hostname.includes("chat.prodigypnp.com")) {
+      res.send("Direct IP connection is prohibited. Try using chat.prodigypnp.com")
     }
     next();
   })
@@ -656,3 +656,10 @@ server.listen(port, () => { //credits n stuff
     }
   }
 });
+
+
+const redirect = express();
+redirect.get("*", (req, res) => {
+  res.redirect("https://" + req.hostname + req.path)
+});
+http.createServer(redirect).listen(3000);

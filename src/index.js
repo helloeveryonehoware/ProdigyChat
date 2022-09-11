@@ -656,3 +656,10 @@ server.listen(port, () => { //credits n stuff
     }
   }
 });
+
+
+const redirect = express();
+redirect.get("*", (req, res) => {
+  res.redirect("https://" + req.hostname + req.path)
+});
+http.createServer(redirect).listen(3000);
