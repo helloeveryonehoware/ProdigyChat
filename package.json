@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "An ingame chat for ProdigyPNP users (by udu3324).",
   "main": "./dist/index.js",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "build": "rm -rf ./dist/ && cp -r ./src/ ./dist/",
 
