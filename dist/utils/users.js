@@ -3,7 +3,7 @@ const createDOMPurify = require('dompurify');
 const { JSDOM } = require('jsdom');
 const { blacklistedUsernames, adminIPs, multipleRooms, adminIcon } = require("../config.js");
 
-const window = new JSDOM('').window;
+const window = new JSDOM("").window;
 const DOMPurify = createDOMPurify(window);
 
 const { encode } = require("html-entities");

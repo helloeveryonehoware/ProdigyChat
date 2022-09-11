@@ -1,16 +1,16 @@
 // Server / Moderation Config
-let serverPort = 3000;
+let serverPort = 80;
 let adminIPs = ["localhost"];
 let adminIcon = `<i class="fa-solid fa-shield"></i>`;
 let botIcon = `<i class="fa-solid fa-keyboard"></i>`;
-let altDetection = true;
+let altDetection = false;
 let msgCooldown = "2";
 // Filter is not case sensitive & doesn't apply to admins
-let blacklistedUsernames = ["admin", "mod", "staff", "server", "typsnd", "code", "system"];
+let blacklistedUsernames = ["admin", "mod", "moderator", "staff", "server", "typsnd", "code", "system", "prodigypnp", "prodigy", "prodigyx", "vido", "gemsvido"];
 let blacklistedIPs = [];
 
 // Chat Addons / Functionality
-let htmlTitle = "Typsnd";
+let htmlTitle = "ProdigyPNP Chat";
 let msgGreet = "";
 let multipleRooms = true;
 let tabs = [
