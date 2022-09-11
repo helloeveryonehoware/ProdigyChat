@@ -1,10 +1,12 @@
 const path = require("path");
+const fs = require("fs");
 const http = require("http");
+const https = require("https");
 const express = require("express");
 const ip = require('ip');
 const { generateMessage, linkify } = require("./utils/messages");
 const { addUser, removeUser, getUser, getUsersInRoom, users } = require("./utils/users");
-let { msgCooldown, serverPort, blacklistedIPs, msgGreet, adminIPs, tabs, adminIcon, altDetection, htmlTitle, blacklistedUsernames, botIcon } = require("./config.js");
+let { PRODUCTION, HTTPS_CHAIN_PATH, HTTPS_KEY_PATH, msgCooldown, serverPort, blacklistedIPs, msgGreet, adminIPs, tabs, adminIcon, altDetection, htmlTitle, blacklistedUsernames, botIcon } = require("./config.js");
 const { encode } = require("html-entities");
 
 const createDOMPurify = require('dompurify');
@@ -17,7 +19,11 @@ const window = new JSDOM('').window;
 const DOMPurify = createDOMPurify(window);
 
 const app = express();
-const server = http.createServer(app);
+const server = https.createServer({
+  key: fs.readFileSync(HTTPS_KEY_PATH),
+  cert: fs.readFileSync(HTTPS_CHAIN_PATH),
+}, app);
+
 const io = require('socket.io')(server, {
   maxHttpBufferSize: 25e8 //25mb
 });
@@ -26,6 +32,14 @@ const port = serverPort;
 const publicDirectoryPath = path.join(__dirname, "../public");
 
 app.use(express.static(publicDirectoryPath));
+if (PRODUCTION) {
+  app.use((req, res, next) => {
+    if (!req.hostname.includes("hacks.prodigypnp.com")) {
+      res.send("Direct IP connection is prohibited. Try using hacks.prodigypnp.com")
+    }
+    next();
+  })
+}
 
 let ipArray = [];
 let ipUsernameArray = [];
