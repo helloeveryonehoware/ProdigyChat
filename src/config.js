@@ -2,7 +2,7 @@
 let PRODUCTION = false;
 let HTTPS_CHAIN_PATH = "/etc/letsencrypt/live/chat.prodigypnp.com/fullchain.pem"
 let HTTPS_KEY_PATH = "/etc/letsencrypt/live/chat.prodigypnp.com/privkey.pem"
-let serverPort = 3000;
+let serverPort = 8080;
 let adminIPs = ["localhost"];
 let adminIcon = `<i class="fa-solid fa-shield"></i>`;
 let botIcon = `<i class="fa-solid fa-keyboard"></i>`;
