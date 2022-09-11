@@ -4,7 +4,7 @@ const express = require("express");
 const ip = require('ip');
 const { generateMessage, linkify } = require("./utils/messages");
 const { addUser, removeUser, getUser, getUsersInRoom, users } = require("./utils/users");
-var { msgCooldown, serverPort, blacklistedIPs, msgGreet, adminIPs, tabs, adminIcon, altDetection, htmlTitle, blacklistedUsernames, botIcon } = require("./config.js");
+let { msgCooldown, serverPort, blacklistedIPs, msgGreet, adminIPs, tabs, adminIcon, altDetection, htmlTitle, blacklistedUsernames, botIcon } = require("./config.js");
 const { encode } = require("html-entities");
 
 const createDOMPurify = require('dompurify');
@@ -27,12 +27,12 @@ const publicDirectoryPath = path.join(__dirname, "../public");
 
 app.use(express.static(publicDirectoryPath));
 
-var ipArray = [];
-var ipUsernameArray = [];
-var banArray = [];
-var usersTypingArray = [];
+let ipArray = [];
+let ipUsernameArray = [];
+let banArray = [];
+let usersTypingArray = [];
 
-var dotsNumber = 0
+let dotsNumber = 0
 function dots() {
   return ".".repeat((dotsNumber++) % 3 + 1)
 }
@@ -41,8 +41,8 @@ setInterval(function () {
   //for each room
   for (let index = 0; index < usersTypingArray.length; ++index) {
     //send packet for specific amount
-    var room = usersTypingArray[index][0]
-    var usersTyping = usersTypingArray[index].length
+    let room = usersTypingArray[index][0]
+    let usersTyping = usersTypingArray[index].length
 
     if (usersTyping >= 7)
       sendToSpecificRoom(room, "usr-type", `${usersTyping} users are currently typing${dots()}`)
@@ -60,9 +60,9 @@ setInterval(function () {
 io.on("connection", socket => {
   let ip = getIP(socket);
 
-  var isAlt = ipArray.some(v => ip.includes(v));
-  var isBlacklisted = blacklistedIPs.some(v => ip.includes(v));
-  var isBanned = banArray.some(v => ip.includes(v));
+  let isAlt = ipArray.some(v => ip.includes(v));
+  let isBlacklisted = blacklistedIPs.some(v => ip.includes(v));
+  let isBanned = banArray.some(v => ip.includes(v));
 
   //filter connection
   if (isAlt && altDetection) {
@@ -114,7 +114,7 @@ function sockets(socket) {
     //add ip to arrays
     ipArray.push(ip);
 
-    var alreadyHas = false
+    let alreadyHas = false
     //add room to usersTypingArray
     for (let index = 0; index < usersTypingArray.length; ++index) {
       if (usersTypingArray[index][0] === user.room) {
@@ -129,7 +129,7 @@ function sockets(socket) {
     ipUsernameArray.push(ip)
 
     //send user if they're an admin and what the admin icon is
-    var adminArr = [adminIPs.some(v => ip.includes(v)), adminIcon]
+    let adminArr = [adminIPs.some(v => ip.includes(v)), adminIcon]
     socket.emit("admin-status", adminArr)
 
     socket.emit("starting-data", [tabs, msgCooldown, htmlTitle])
@@ -139,7 +139,7 @@ function sockets(socket) {
 
   socket.on("sendMessage", (message, callback) => {
     const user = getUser(socket.id);
-    var msg = message;
+    let msg = message;
 
     //check for command
     if (/^\//.test(message)) {
@@ -190,11 +190,11 @@ function sockets(socket) {
   socket.on("sendDirectMessage", (packet, callback) => {
     const userSentFrom = getUser(socket.id);
     const userSendTo = packet[0];
-    var userMessage = packet[1];
+    let userMessage = packet[1];
 
     //check if user sending to is real
-    var userExists = false;
-    var userID;
+    let userExists = false;
+    let userID;
 
     for (let index = 0; index < users.length; ++index) {
       //remove shield
@@ -225,9 +225,9 @@ function sockets(socket) {
     if (!userExists) return callback("User does not exist!");
 
     //send to that user
-    var userSendingTo = getUser(userID)
+    let userSendingTo = getUser(userID)
 
-    var packetOut = [userSentFrom.username, linkify(userMessage)]
+    let packetOut = [userSentFrom.username, linkify(userMessage)]
     io.to(userSendingTo.room).emit("recieveDirectMessage" + userSendTo, packetOut);
 
     cLog(Color.reset, `${time()} DM > FROM: ${getUsername(userSentFrom)} | TO: ${userSendTo}`)
@@ -238,7 +238,7 @@ function sockets(socket) {
     const user = getUser(socket.id);
 
     //get index of room in usersTypingArray and return if not found
-    var indexOfRoom = -1
+    let indexOfRoom = -1
     for (let index = 0; index < usersTypingArray.length; ++index) {
       if (usersTypingArray[index][0] === user.room) {
         indexOfRoom = index
@@ -279,8 +279,8 @@ function sockets(socket) {
 
     const userKicking = username;
 
-    var userExists = false;
-    var userModerationObject;
+    let userExists = false;
+    let userModerationObject;
     // check if user sending to is real
     for (let index = 0; index < users.length; ++index) {
       //remove shield
@@ -312,8 +312,8 @@ function sockets(socket) {
 
     const userKicking = username;
 
-    var userExists = false;
-    var userModerationObject;
+    let userExists = false;
+    let userModerationObject;
     // check if user sending to is real
     for (let index = 0; index < users.length; ++index) {
       //remove shield
@@ -338,7 +338,7 @@ function sockets(socket) {
     blacklistedUsernames.push(username)
 
     //find their ip
-    var indexOfIP = ipUsernameArray.indexOf(username) + 1
+    let indexOfIP = ipUsernameArray.indexOf(username) + 1
 
     //add to array of ban
     banArray.push(username)
@@ -362,7 +362,7 @@ function sockets(socket) {
 
     const userUnbanning = username;
 
-    var userExists = false;
+    let userExists = false;
     // check if user sending to is real
     for (let index = 0; index < banArray.length; ++index) {
       if (banArray[index] === userUnbanning) {
@@ -373,7 +373,7 @@ function sockets(socket) {
 
     if (!userExists) {
       //send a list of banned people if username entered is wrong
-      var listOfBannedPeople = "User provided was invalid. See list below for unbannable people! \n\nList of Banned Users:\n"
+      let listOfBannedPeople = "User provided was invalid. See list below for unbannable people! \n\nList of Banned Users:\n"
 
       //write a list of banned people (not their ips) only if there are any
       if (banArray.length != 0)
@@ -387,13 +387,13 @@ function sockets(socket) {
     }
 
     //remove user from blacklisted usernames and ban array
-    var index = banArray.indexOf(userUnbanning)
+    let index = banArray.indexOf(userUnbanning)
     if (index > -1) {
       banArray.splice(index + 1, 1); //remove ip
       banArray.splice(index, 1); //remove username
     }
 
-    var index2 = blacklistedUsernames.indexOf(userUnbanning)
+    let index2 = blacklistedUsernames.indexOf(userUnbanning)
     if (index2 > -1) {
       blacklistedUsernames.splice(index2 + 1, 1); //remove ip
       blacklistedUsernames.splice(index2, 1); //remove username
@@ -434,7 +434,7 @@ function sockets(socket) {
     //remove ip from list when they leave
     ipArray = ipArray.filter(e => e !== getIP(socket));
 
-    var index = ipUsernameArray.indexOf(getIP(socket))
+    let index = ipUsernameArray.indexOf(getIP(socket))
     if (index > -1) {
       ipUsernameArray.splice(index, 1); //remove ip
       ipUsernameArray.splice(index - 1, 1); //remove username
@@ -457,7 +457,7 @@ function sockets(socket) {
     const doing = packet.substring(packet.indexOf("|") + 1)
 
     //find where the game is stored in the array
-    var gameIndex;
+    let gameIndex;
     for (let index = 0; index < ticTacToeGame.length; ++index) {
       if (ticTacToeGame[index][0] === room)
         gameIndex = index
@@ -485,7 +485,7 @@ function sockets(socket) {
       if (user !== currentTurn) return
 
       //return if cant find tile
-      var indexOfTile = indexOf2dArray(ticTacToeGame[gameIndex][5], doing)
+      let indexOfTile = indexOf2dArray(ticTacToeGame[gameIndex][5], doing)
       if (indexOfTile === false) return
 
       //place the marker
@@ -495,8 +495,8 @@ function sockets(socket) {
         ticTacToeGame[gameIndex][5][indexOfTile[0]][indexOfTile[1]] = "O"
 
       //check for win and tie
-      var playerWon = checkWinTTT(gameIndex)
-      var playerTie = checkTieTTT(ticTacToeGame[gameIndex][5])
+      let playerWon = checkWinTTT(gameIndex)
+      let playerTie = checkTieTTT(ticTacToeGame[gameIndex][5])
 
       if (playerWon) {
         ticTacToeGame[gameIndex][3] = "finished"
@@ -523,7 +523,7 @@ function sockets(socket) {
     const doing = packet.substring(packet.indexOf("|") + 1)
 
     //find where the game is stored in the array
-    var gameIndex;
+    let gameIndex;
     for (let index = 0; index < connect4Game.length; ++index) {
       if (connect4Game[index][0] === room)
         gameIndex = index
@@ -553,7 +553,7 @@ function sockets(socket) {
       if (placeConnect4Tile(gameIndex, doing)) return
 
       //check for win and tie
-      var playerWon = checkWinConnect4(gameIndex)
+      let playerWon = checkWinConnect4(gameIndex)
 
       if (playerWon) {
         connect4Game[gameIndex][3] = "finished"
@@ -574,7 +574,7 @@ function sockets(socket) {
 }
 
 function sendToAllRooms(event, string) {
-  var roomsSentTo = [""]
+  let roomsSentTo = [""]
   for (let index = 0; index < users.length; ++index) {
     if (roomsSentTo.includes(users[index].room)) return
 
@@ -614,7 +614,7 @@ server.listen(port, () => { //credits n stuff
 
   createSave()
 
-  //set variables from save.txt instead of config.js
+  //set letiables from save.txt instead of config.js
   if (readSave("cooldown") !== false) {
     if (readSave("cooldown") === msgCooldown) {
       deleteSave("cooldown")
