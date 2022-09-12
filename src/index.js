@@ -1,5 +1,6 @@
 const path = require("path");
 const fs = require("fs");
+const cors = require("cors");
 const http = require("http");
 const https = require("https");
 const express = require("express");
@@ -32,6 +33,7 @@ const port = serverPort;
 const publicDirectoryPath = path.join(__dirname, "../public");
 
 app.use(express.static(publicDirectoryPath));
+app.use(cors())
 if (PRODUCTION) {
   app.use((req, res, next) => {
     if (!req.hostname.includes("chat.prodigypnp.com")) {
