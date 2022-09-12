@@ -36,8 +36,9 @@ if (PRODUCTION) {
   app.use((req, res, next) => {
     if (!req.hostname.includes("chat.prodigypnp.com")) {
       res.send("Direct IP connection is prohibited. Try using chat.prodigypnp.com")
+    } else {
+      next();
     }
-    next();
   })
 }
 
@@ -107,6 +108,8 @@ function sockets(socket) {
   //get ip and if they're an admin
   const ip = getIP(socket);
   const admin = adminIPs.some(v => ip.includes(v));
+
+  console.log(ip)
 
   socket.on("join", (options, callback) => {
     const { error, user } = addUser({ ip, id: socket.id, ...options });
