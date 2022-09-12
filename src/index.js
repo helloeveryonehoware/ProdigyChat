@@ -15,7 +15,7 @@ const { cLog, Color, time } = require("./utils/logging");
 const { createSave, writeSave, readSave, deleteSave } = require("./utils/writer");
 const { runCommand, ticTacToeGame, generateNewTTTBoard, indexOf2dArray, checkWinTTT, checkTieTTT, connect4Game, generateNewConnect4Board, placeConnect4Tile, checkWinConnect4 } = require("./utils/commands");
 
-const window = new JSDOM('').window;
+const window = new JSDOM("").window;
 const DOMPurify = createDOMPurify(window);
 
 const app = express();

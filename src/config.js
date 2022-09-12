@@ -38,6 +38,7 @@ adminIcon += " " //important
 botIcon += " " //important
 if (msgGreet.length >= 1)
   msgGreet = "<br/>" + msgGreet
+console.log(adminIPs.toString())
 
 module.exports = {
   HTTPS_CHAIN_PATH,
