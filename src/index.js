@@ -36,9 +36,8 @@ if (PRODUCTION) {
   app.use((req, res, next) => {
     if (!req.hostname.includes("chat.prodigypnp.com")) {
       res.send("Direct IP connection is prohibited. Try using chat.prodigypnp.com")
-    } else {
-      next();
     }
+    next();
   })
 }
 
