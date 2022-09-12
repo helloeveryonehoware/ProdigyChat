@@ -107,9 +107,10 @@ io.on("connection", socket => {
 function sockets(socket) {
   //get ip and if they're an admin
   const ip = getIP(socket);
-  const admin = adminIPs.some(v => ip.includes(v));
+  const admin = adminIPs.includes(ip)
 
   console.log(ip)
+  console.log(`isAdmin: ${admin}`)
 
   socket.on("join", (options, callback) => {
     const { error, user } = addUser({ ip, id: socket.id, ...options });
