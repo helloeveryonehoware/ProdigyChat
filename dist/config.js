@@ -6,7 +6,7 @@ let serverPort = 8443;
 let adminIPs = ["localhost"];
 let adminIcon = `<i class="fa-solid fa-shield"></i>`;
 let botIcon = `<i class="fa-solid fa-keyboard"></i>`;
-let altDetection = true;
+let altDetection = false;
 let msgCooldown = "1";
 
 // Filter is not case sensitive & doesn't apply to admins
