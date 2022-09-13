@@ -1,5 +1,5 @@
 // :3
-console.log("https://github.com/udu3324/typsnd")
+console.log("original: https://github.com/udu3324/typsnd")
 
 // Elements
 var $joinButton = document.querySelector("#join-button");
