@@ -1,5 +1,6 @@
 const path = require("path");
 const fs = require("fs");
+const cors = require("cors");
 const http = require("http");
 const https = require("https");
 const express = require("express");
@@ -15,7 +16,7 @@ const { cLog, Color, time } = require("./utils/logging");
 const { createSave, writeSave, readSave, deleteSave } = require("./utils/writer");
 const { runCommand, ticTacToeGame, generateNewTTTBoard, indexOf2dArray, checkWinTTT, checkTieTTT, connect4Game, generateNewConnect4Board, placeConnect4Tile, checkWinConnect4 } = require("./utils/commands");
 
-const window = new JSDOM('').window;
+const window = new JSDOM("").window;
 const DOMPurify = createDOMPurify(window);
 
 const app = express();
@@ -32,6 +33,7 @@ const port = serverPort;
 const publicDirectoryPath = path.join(__dirname, "../public");
 
 app.use(express.static(publicDirectoryPath));
+app.use(cors())
 if (PRODUCTION) {
   app.use((req, res, next) => {
     if (!req.hostname.includes("chat.prodigypnp.com")) {
@@ -106,7 +108,10 @@ io.on("connection", socket => {
 function sockets(socket) {
   //get ip and if they're an admin
   const ip = getIP(socket);
-  const admin = adminIPs.some(v => ip.includes(v));
+  const admin = adminIPs.includes(ip)
+
+  console.log(ip)
+  console.log(`isAdmin: ${admin}`)
 
   socket.on("join", (options, callback) => {
     const { error, user } = addUser({ ip, id: socket.id, ...options });
